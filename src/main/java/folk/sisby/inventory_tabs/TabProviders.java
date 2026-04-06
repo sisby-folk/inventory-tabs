@@ -5,6 +5,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.collect.Multiset;
 import folk.sisby.inventory_tabs.providers.BlockTabProvider;
 import folk.sisby.inventory_tabs.providers.ChestBlockTabProvider;
@@ -172,10 +173,15 @@ public class TabProviders {
             warmValues.add(entry.getValue());
         }
         if (InventoryTabs.CONFIG.configLogging) {
-            providerTags.asMap().values().forEach(tags -> tags.removeIf(tag -> !"c".equals(tag.id().getNamespace()) && !valueNamespaces.contains(tag.id().getNamespace())));
-            if (!providerTags.isEmpty()) {
-                InventoryTabs.LOGGER.warn("[Inventory Tabs] {} Re-assignable provider tags for {}:", providerTags.size(), registryKey.getValue());
-                providerTags.asMap().forEach((provider, tags) -> {
+	        Multimap<Identifier, TagKey<T>> reassignableTags = HashMultimap.create();
+			providerTags.forEach((id, tag) -> {
+				if ("c".equals(tag.id().getNamespace()) || valueNamespaces.contains(tag.id().getNamespace())) {
+					reassignableTags.put(id, tag);
+				}
+			});
+	        if (!reassignableTags.isEmpty()) {
+                InventoryTabs.LOGGER.warn("[Inventory Tabs] {} Re-assignable provider tags for {}:", reassignableTags.size(), registryKey.getValue());
+		        reassignableTags.asMap().forEach((provider, tags) -> {
                     if (!tags.isEmpty()) {
                         InventoryTabs.LOGGER.info(" | {}", provider);
                         tags.stream().collect(Collectors.groupingBy(t -> t.id().getNamespace())).entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(e -> {
