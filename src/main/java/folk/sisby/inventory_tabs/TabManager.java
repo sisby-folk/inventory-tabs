@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.client.world.ClientWorld;
@@ -303,7 +304,7 @@ public class TabManager {
         boolean active = left ? currentPage > 0 : currentPage < getMaximumPage();
         int u = BUTTON_WIDTH * (left ? 0 : 1);
         int v = BUTTON_HEIGHT * (active ? hovered ? 2 : 1 : 0);
-        drawContext.drawTexture(BUTTONS_TEXTURE, rect.getX(), rect.getY(), u, v, rect.getWidth(), rect.getHeight());
+        drawContext.drawTexture(RenderLayer::getGuiTextured, BUTTONS_TEXTURE, rect.getX(), rect.getY(), u, v, rect.getWidth(), rect.getHeight(), 256, 256);
         if (hovered) drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer, Text.literal((currentPage + 1) + "/" + (getMaximumPage() + 1)), (int) mouseX, (int) mouseY);
     }
 

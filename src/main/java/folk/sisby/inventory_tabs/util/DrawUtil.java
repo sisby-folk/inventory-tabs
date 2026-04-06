@@ -1,6 +1,7 @@
 package folk.sisby.inventory_tabs.util;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 
 public class DrawUtil {
@@ -10,9 +11,9 @@ public class DrawUtil {
         int rightWidth = width - leftWidth;
         int bottomHeight = height - topHeight;
 
-        context.drawTexture(texture, x, y, u, v, leftWidth, topHeight, texWidth, texHeight); // Top Left
-        context.drawTexture(texture, x + leftWidth, y, u + regionWidth - rightWidth, v, rightWidth, topHeight, texWidth, texHeight); // Top Right
-        context.drawTexture(texture, x, y + topHeight, u, v + regionHeight - bottomHeight, leftWidth, bottomHeight, texWidth, texHeight); // Bottom Left
-        context.drawTexture(texture, x + leftWidth, y + topHeight, u + regionWidth - rightWidth, v + regionHeight - bottomHeight, rightWidth, bottomHeight, texWidth, texHeight); // Bottom Right
+        context.drawTexture(RenderLayer::getGuiTextured, texture, x, y, u, v, leftWidth, topHeight, texWidth, texHeight); // Top Left
+        context.drawTexture(RenderLayer::getGuiTextured, texture, x + leftWidth, y, u + regionWidth - rightWidth, v, rightWidth, topHeight, texWidth, texHeight); // Top Right
+        context.drawTexture(RenderLayer::getGuiTextured, texture, x, y + topHeight, u, v + regionHeight - bottomHeight, leftWidth, bottomHeight, texWidth, texHeight); // Bottom Left
+        context.drawTexture(RenderLayer::getGuiTextured, texture, x + leftWidth, y + topHeight, u + regionWidth - rightWidth, v + regionHeight - bottomHeight, rightWidth, bottomHeight, texWidth, texHeight); // Bottom Right
     }
 }

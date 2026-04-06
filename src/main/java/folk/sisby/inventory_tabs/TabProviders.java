@@ -76,7 +76,7 @@ public class TabProviders {
         InventoryTabs.LOGGER.info("[InventoryTabs] Reloading tab providers.");
         refreshConfigPlaceholders();
         if (InventoryTabs.CONFIG.configLogging) {
-            Map<String, List<RegistryKey<ScreenHandlerType<?>>>> types = manager.get(RegistryKeys.SCREEN_HANDLER).getKeys().stream().filter(k -> ScreenSupport.allowTabs(k) == null && InventoryTabs.CONFIG.allowScreensByDefault).collect(Collectors.groupingBy(k -> k.getValue().getNamespace()));
+            Map<String, List<RegistryKey<ScreenHandlerType<?>>>> types = manager.getOrThrow(RegistryKeys.SCREEN_HANDLER).getKeys().stream().filter(k -> ScreenSupport.allowTabs(k) == null && InventoryTabs.CONFIG.allowScreensByDefault).collect(Collectors.groupingBy(k -> k.getValue().getNamespace()));
             if (!types.isEmpty()) {
                 InventoryTabs.LOGGER.warn("[Inventory Tabs] {} Automatically tabbed screen handlers:", types.values().stream().mapToInt(Collection::size).sum());
                 types.forEach((namespace, ids) -> InventoryTabs.LOGGER.info(" | {}: {}", namespace, ids.stream().map(RegistryKey::getValue).map(Identifier::getPath).collect(Collectors.joining(", "))));
@@ -123,8 +123,8 @@ public class TabProviders {
         unsortedOverrides.entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().priority())).forEach(e -> overrides.put(e.getKey(), e.getValue()));
 
         // Add values to providers
-        for (Map.Entry<RegistryKey<T>, T> entry : manager.get(registryKey).getEntrySet()) {
-            RegistryEntry<T> holder = manager.createRegistryLookup().getOptional(registryKey).orElseThrow().getOrThrow(entry.getKey());
+        for (Map.Entry<RegistryKey<T>, T> entry : manager.getOrThrow(registryKey).getEntrySet()) {
+            RegistryEntry<T> holder = manager.getOptional(registryKey).orElseThrow().getOrThrow(entry.getKey());
 
             Optional<Map.Entry<RegistryMatcher<T>, RegistryTabProvider<T>>> override = overrides.entrySet().stream().filter(e -> e.getKey().is(holder)).findFirst();
             if (override.isPresent()) {

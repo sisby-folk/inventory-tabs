@@ -34,7 +34,7 @@ public record RegistryMatcher<T>(Either<Either<RegistryEntry<T>, TagKey<T>>, Pai
         } else {
             Identifier id = Identifier.tryParse(value);
             if (id == null) return null;
-            return manager.createRegistryLookup().getOptional(registry).orElseThrow().getOptional(RegistryKey.of(registry, id)).map(h -> new RegistryMatcher<>(Either.left(Either.left(h)))).orElse(null);
+            return manager.getOptional(registry).orElseThrow().getOptional(RegistryKey.of(registry, id)).map(h -> new RegistryMatcher<>(Either.left(Either.left(h)))).orElse(null);
         }
     }
 

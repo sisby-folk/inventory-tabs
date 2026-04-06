@@ -4,6 +4,7 @@ import folk.sisby.inventory_tabs.InventoryTabs;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.text.Text;
@@ -46,39 +47,39 @@ public abstract class MixinGenericContainerScreen extends HandledScreen<GenericC
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void containerHeader(DrawContext drawContext, float delta, int mouseX, int mouseY, CallbackInfo ci) {
-        drawContext.drawTexture(TEXTURE, (this.width - this.backgroundWidth) / 2, (this.height - this.backgroundHeight) / 2, 0, 0, this.backgroundWidth, 7);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, TEXTURE, (this.width - this.backgroundWidth) / 2, (this.height - this.backgroundHeight) / 2, 0, 0, this.backgroundWidth, 7, 256, 256);
     }
 
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 0), index = 2)
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0), index = 3)
     public int containerY(int original) {
         return original + 7;
     }
 
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 0), index = 4)
-    public int containerV(int original) {
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0), index = 5)
+    public float containerV(float original) {
         if (rows == 6 && InventoryTabs.CONFIG.compactLargeContainers) return original + 17;
         return original + 8;
     }
 
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 0), index = 6)
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0), index = 7)
     public int containerHeight(int original) {
         if (rows == 6 && InventoryTabs.CONFIG.compactLargeContainers) return original - 17;
         return original - 8;
     }
 
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 1), index = 2)
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1), index = 3)
     public int inventoryY(int original) {
         if (rows == 6 && InventoryTabs.CONFIG.compactLargeContainers) return original - 10;
         return original - 1;
     }
 
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 1), index = 4)
-    public int inventoryV(int original) {
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1), index = 5)
+    public float inventoryV(float original) {
         if (rows == 6 && InventoryTabs.CONFIG.compactLargeContainers) return original + 9;
         return original;
     }
 
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 1), index = 6)
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1), index = 7)
     public int inventoryHeight(int original) {
         if (rows == 6 && InventoryTabs.CONFIG.compactLargeContainers) return original - 9;
         return original;
